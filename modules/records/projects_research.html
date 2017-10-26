@@ -1,0 +1,42 @@
+<section>
+    VmInclude:__BASE__/vmiis/Common-Code/grid/grid_without_export.html
+</section>
+<script>
+    function F__ID(){
+        //-------------------------------------
+        VmInclude:__BASE__/vmiis/Common-Code/grid/grid.js
+        VmInclude:__BASE__/vmiis/Common-Code/style/ease-in-out.js
+        //-------------------------------------
+        _fields="_Form,Image,_More,Catchy_title,Project_Name,_gridHidden|Brief_Description,_gridHidden|Detail_Description";
+        _fields+=",Chief_Investigator,Contact_Name, Contact_Phone,Contact_Email,_gridHidden|Ethics";
+        _fields+=",Others";
+        _fields+=",Submit Date|DateTime,_Delete";
+        //-------------------------------------
+        _cell_render=function(records,I,field,td,set_value,source){
+            switch(field){
+                case 'Image':
+                    VmInclude:__BASE__/vmiis/Common-Code/grid/field_image.js
+                    break;
+                case '_More':
+                    records[I].vm_custom[field]=true;
+                    if(records[I].UID==null || records[I].UID==undefined) return;
+                    td.html("<u style='cursor:pointer;'>More...</u>");
+                    td.find('u').on('click',function(){
+                        $vm.load_module_by_name(_app_id+_module.sub_rec,$vm.root_layout_content_slot,{
+                            project_name:records[I].Project_Name,
+                            project_rid:records[I].ID,
+                            project_pid:_db_pid,
+                            project_uid:records[I].UID,
+                        })
+                    })
+                    break;
+            }
+        }
+        //-------------------------------------
+        $('#D__ID').on('load',function(){  _set_req(); _request_data();  })
+        //-------------------------------------
+    }
+</script>
+<style>
+    VmInclude:__BASE__/vmiis/Common-Code/grid/grid.css
+</style>

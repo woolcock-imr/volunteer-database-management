@@ -1,0 +1,91 @@
+<section>
+    <div id=toolbar__ID>
+        <a id=back__ID>Back</a><span class=tab__ID></span>
+        <span id=name__ID style='font-weight: bold'></span><span class=tab__ID></span>
+        <a id=search1__ID>Query</a>         <input id=keyword__ID type=text style='display:none' />
+        <span class=tab__ID></span>Page Size: <select id=page_size__ID><option>30</option><option>50</option><option>100</option><option>200</option></select>
+        <span class=tab__ID></span>
+        <span id=I__ID style="display:none">0</span><span id=A__ID></span>
+        <img id=p__ID src="https://cbs.wappsystem.com/system/images/p.png" ><img id=n__ID src="https://cbs.wappsystem.com/system/images/n.png" >
+        <span class=tab__ID></span>Start page: <input id=start__ID type=text style="width:50px" />
+        Number of page: <input id=num__ID type=text  style="width:50px" />
+        <a id=Export__ID>Export</a>
+        <span id=elapsed__ID style='float:right'></span>
+
+        <span style='font-weight:bold'>Post Code: </span><input type=text id=postcode_min__ID placeholder="Min" style='width:80px;padding-left:3px' /> <input type=text id=postcode_max__ID placeholder="Max" style='width:80px;padding-left:3px' />
+        <span style='font-weight:bold'>Gender: </span><select id=gender__ID><option>Male</option><option>Female</option><option>Unspecified</option><option>Any</option></select>
+        <span style='font-weight:bold'>Age: </span><input type=text id=min_age__ID placeholder="Min Age" style='width:80px;padding-left:3px' /> <input type=text id=max_age__ID placeholder="Max Age" style='width:80px;padding-left:3px' />
+        <br><br>
+        <span style='font-weight:bold'>Inclusion Criteria:&nbsp;</span>
+        <span>Asthma</span><input type=checkbox id=inc_asthma__ID>
+        <span>COPD</span><input type=checkbox id=inc_copd>
+        <span>Emphysema</span><input type=checkbox id=inc_emphysema__ID>
+        <span>Lung Cancer</span><input type=checkbox id=inc_lung_cancer__ID>
+        <span>Rhintis</span><input type=checkbox id=inc_rhintis__ID>
+        <span>Insomnia</span><input type=checkbox id=inc_insomnia__ID>
+        <span>Narcolepsy</span><input type=checkbox id=inc_narcolepsy__ID>
+        <span>OSA</span><input type=checkbox id=inc_osa__ID>
+        <span>RLS</span><input type=checkbox id=inc_rls__ID>
+        <br><br>
+        <span style='font-weight:bold'>Exclusion Criteria:</span>
+        <span>Asthma</span><input type=checkbox id=exc_asthma__ID>
+        <span>COPD</span><input type=checkbox id=exc_copd>
+        <span>Emphysema</span><input type=checkbox id=exc_emphysema__ID>
+        <span>Lung Cancer</span><input type=checkbox id=exc_lung_cancer__ID>
+        <span>Rhintis</span><input type=checkbox id=exc_rhintis__ID>
+        <span>Insomnia</span><input type=checkbox id=exc_insomnia__ID>
+        <span>Narcolepsy</span><input type=checkbox id=exc_narcolepsy__ID>
+        <span>OSA</span><input type=checkbox id=exc_osa__ID>
+        <span>RLS</span><input type=checkbox id=exc_rls__ID>
+        <br><br>
+    </div>
+    <div id=table__ID>
+        <table id=grid__ID></table>
+    </div>
+</section>
+<script>
+    function F__ID(){
+        //-------------------------------------
+        VmInclude:__BASE__/vmiis/Common-Code/grid/grid.js
+        VmInclude:__BASE__/vmiis/Common-Code/style/ease-in-out.js
+        //-------------------------------------
+        _fields="_Form,First_Name,Last_Name,Phone,Postcode,Email,Gender,Year_of_Birth,Asthma,COPD,Chronic_Bronchitis,Emphysema,Rhintis,Lung_Cancer,Insomnia,Narcolepsy,OSA,RLS";
+        //_fields+=",Submit Date|DateTime,_Delete";
+        //-------------------------------------
+        var where_gender='';
+        var where_age='';
+        $('#search1__ID').on('click',function(){
+            if($('#gender__ID').val()=='Male') {where_gender = " and @('Gender')='Male'"}
+            else if($('#gender__ID').val()=='Female') {where_gender = " and @('Gender')='Female'"}
+            else if($('#gender__ID').val()=='Unspecified') {where_gender = " and @('Gender')='Indeterminate/Intersex/Unspecified'"}
+            else {where_gender="";}
+
+             _set_req(); _request_data();
+        });
+        //-------------------------------------
+        _cell_render=function(records,I,field,td,set_value,source){
+            switch(field){
+            }
+        }
+        $('#D__ID').on('load',function(){  _set_req(); _request_data();  })
+        //-------------------------------------
+        var _set_req=function(){
+            var sql="with tb as (select Information,ID,UID,PUID,DateTime,Author,RowNum=row_number() over (order by ID DESC) from [TABLE-"+_db_pid+"] where @('Medical_Research')='1' "+where_gender+")";
+            sql+="select Information,ID,UID,PUID,DateTime,Author,RowNum from tb where RowNum between @I6 and @I7";
+            var sql_n="select count(ID) from [TABLE-"+_db_pid+"-@S1] where @('Medical_Research')='1' "+where_gender+"";
+            _req={cmd:'query_records',db_pid:_db_pid,sql:sql,sql_n:sql_n,I:$('#I__ID').text(),page_size:$('#page_size__ID').val()}
+        }
+        //-------------------------------------
+        var _set_req_export=function(){
+            var sql="with tb as (select Information,ID,UID,DateTime,Author,RowNum=row_number() over (order by ID DESC) from [TABLE-"+_db_pid+"] where @('Medical_Research')='1' "+where_gender+")";
+            sql+="select Information,ID,UID,DateTime,Author,RowNum from tb";
+            _set_from_to();
+            if(_from!='0' && _to!='0') sql+=" where RowNum between @I6 and @I7";
+            _req={cmd:'query_records',sql:sql,i6:_from,i7:_to}
+        }
+        //-----------------------------------------------
+    }
+</script>
+<style>
+    VmInclude:__BASE__/vmiis/Common-Code/grid/grid.css
+</style>

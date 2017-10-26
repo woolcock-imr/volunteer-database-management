@@ -1,0 +1,83 @@
+<section>
+    <div id=toolbar__ID>
+        <a id=back__ID>Back</a><span class=tab__ID></span><span id=name__ID></span>
+    </div>
+    <div id=panel__ID style='clear:left;'>
+        <div class='nav__ID'>
+            <span>Volunteer Information</span>
+            <ul>
+                <li data-name=volunteer_demographic_child data-s=1>Demographic
+                </li>
+            </ul>
+            <br>
+            <span>Subscription</span>
+            <ul>
+                <li data-name=volunteer_subscription_child data-s=1>Medical research and newsletters
+                </li>
+            </ul>
+            <br>
+            <span>Medical Status</span>
+            <ul>
+                <li data-name=volunteer_medical_status_child data-s=1>Diagnosed Conditions
+                </li>
+            </ul>
+            <br>
+            <span>Project</span>
+            <ul>
+                <li data-name=volunteer_research_participation_child data-s=1>Research participation</li>
+                </li>
+            </ul>
+            <br>
+            <span>Management</span>
+            <ul>
+                <li data-name=volunteer_call_log_child data-s=1>Call Log
+                </li>
+                <!-- <li data-name=vd_research_participation_child data-s=1>Research Participation -->
+                </li>
+            </ul>
+            <br>
+    </div>
+</section>
+<script>
+    //---------------------------------------------
+    function F__ID(){
+        //---------------------------------------------
+        VmInclude:__BASE__/vmiis/Common-Code/navigation/navigation.js
+        VmInclude:__BASE__/vmiis/Common-Code/style/ease-in-out.js
+        //---------------------------------------------
+        var name='';
+        $('#D__ID').on('load',function(){
+            //-----------------------
+            name=$vm.vm['__ID'].op.volunteer_name;
+            $('#name__ID').text(name);
+        });
+        //---------------------------------------------
+        _special_click_process=function(li){
+            var module_name=$(li).attr('data-name');
+            var slot=undefined;
+            switch(module_name){
+                case 'volunteer_research_participation_child':
+                case 'volunteer_call_log_child':
+                    slot=$vm.root_layout_content_slot;
+                break;
+            }
+            $vm.load_module_by_name(_app_id+module_name,slot,{
+                volunteer_name:$vm.vm['__ID'].op.volunteer_name,
+                volunteer_login_email:$vm.vm['__ID'].op.volunteer_login_email,
+                volunteer_rid:$vm.vm['__ID'].op.volunteer_rid,
+                volunteer_pid:$vm.vm['__ID'].op.volunteer_pid,
+                volunteer_uid:$vm.vm['__ID'].op.volunteer_uid,
+            });
+        }
+        //-------------------------------------------------
+    }
+</script>
+<style>
+    VmInclude:__BASE__/vmiis/Common-Code/navigation/navigation.css
+    #D__ID{
+        background: url("__BASE__/vmiis/common-code/image/texture.png");
+    }
+    .nav__ID span{
+        color:#005500;
+    }
+</style>

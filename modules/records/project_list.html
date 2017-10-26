@@ -1,0 +1,105 @@
+<section>
+    VmInclude:__BASE__/vmiis/Common-Code/grid/grid_without_new_and_save.html
+</section>
+<script>
+    function F__ID(){
+        //-------------------------------------
+        VmInclude:__BASE__/vmiis/Common-Code/grid/grid.js
+        VmInclude:__BASE__/vmiis/Common-Code/style/ease-in-out.js
+        //-------------------------------------
+        _fields="_Hidden|_My_Project,Project_Name,_All_Volunteers,_Project_Volunteers,_New_Recruits,_Screening_Failure,_Hidden|_Volunteers";
+        _fields+=",Chief_Investigator,Contact_Name, Contact_Phone,Contact_Email";
+        //_fields+=",Others";
+        //_fields+=",Submit Date|DateTime,_Delete";
+        //-------------------------------------
+        _cell_render=function(records,I,field,td,set_value,source){
+            records[I].vm_readonly[field]=true;
+            switch(field){
+                case '_My_Project':
+                    records[I].vm_custom[field]=true;
+                    if(records[I].UID==null || records[I].UID==undefined) return;
+                    td.html("<u style='cursor:pointer;'>My Project...</u>");
+                    td.find('u').on('click',function(){
+                        $vm.load_module_by_name(_app_id+_module.sub_rec,$vm.root_layout_content_slot,{
+                            project_name:records[I].Project_Name,
+                            project_rid:records[I].ID,
+                            project_pid:_db_pid,
+                            project_uid:records[I].UID,
+                        })
+                    })
+                    break;
+                case '_All_Volunteers':
+                    records[I].vm_custom[field]=true;
+                    if(records[I].UID==null || records[I].UID==undefined) return;
+                    td.html("<u style='cursor:pointer;'>All Volunteers...</u>");
+                    td.find('u').on('click',function(){
+                        $vm.load_module_by_name(_app_id+_module.sub_all,$vm.root_layout_content_slot,{
+                            project_name:records[I].Project_Name,
+                            project_rid:records[I].ID,
+                            project_pid:_db_pid,
+                            project_uid:records[I].UID,
+                        })
+                    })
+                    break;
+                case '_Project_Volunteers':
+                    records[I].vm_custom[field]=true;
+                    if(records[I].UID==null || records[I].UID==undefined) return;
+                    td.html("<u style='cursor:pointer;'>Project Volunteers...</u>");
+                    td.find('u').on('click',function(){
+                        $vm.load_module_by_name(_app_id+_module.sub_part,$vm.root_layout_content_slot,{
+                            project_name:records[I].Project_Name,
+                            project_rid:records[I].ID,
+                            project_pid:_db_pid,
+                            project_uid:records[I].UID,
+                        })
+                    })
+                    break;
+                case '_New_Recruits':
+                    records[I].vm_custom[field]=true;
+                    if(records[I].UID==null || records[I].UID==undefined) return;
+                    td.html("<u style='cursor:pointer;'>New Recruits...</u>");
+                    td.find('u').on('click',function(){
+                        $vm.load_module_by_name(_app_id+_module.sub_new,$vm.root_layout_content_slot,{
+                            project_name:records[I].Project_Name,
+                            project_rid:records[I].ID,
+                            project_pid:_db_pid,
+                            project_uid:records[I].UID,
+                        })
+                    })
+                    break;
+                case '_Volunteers':
+                    records[I].vm_custom[field]=true;
+                    if(records[I].UID==null || records[I].UID==undefined) return;
+                    td.html("<u style='cursor:pointer;'>Volunteers...</u>");
+                    td.find('u').on('click',function(){
+                        $vm.load_module_by_name(_app_id+_module.vol_rec,$vm.root_layout_content_slot,{
+                            project_name:records[I].Project_Name,
+                            project_rid:records[I].ID,
+                            project_pid:_db_pid,
+                            project_uid:records[I].UID,
+                        })
+                    })
+                    break;
+                case '_Screening_Failure':
+                    records[I].vm_custom[field]=true;
+                    if(records[I].UID==null || records[I].UID==undefined) return;
+                    td.html("<u style='cursor:pointer;'>Screening Failure...</u>");
+                    td.find('u').on('click',function(){
+                        $vm.load_module_by_name(_app_id+_module.sub_fail,$vm.root_layout_content_slot,{
+                            project_name:records[I].Project_Name,
+                            project_rid:records[I].ID,
+                            project_pid:_db_pid,
+                            project_uid:records[I].UID,
+                        })
+                    })
+                    break;
+            }
+        }
+        //-------------------------------------
+        $('#D__ID').on('load',function(){  _set_req(); _request_data();  })
+        //-------------------------------------
+    }
+</script>
+<style>
+    VmInclude:__BASE__/vmiis/Common-Code/grid/grid.css
+</style>

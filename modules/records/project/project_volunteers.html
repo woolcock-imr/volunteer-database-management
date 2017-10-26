@@ -1,0 +1,74 @@
+<section>
+    VmInclude:__BASE__/vmiis/Common-Code/grid/grid_without_export.html
+</section>
+<script>
+    function F__ID(){
+        //-------------------------------------
+        VmInclude:__BASE__/vmiis/Common-Code/grid/grid.js
+        VmInclude:__BASE__/vmiis/Common-Code/style/ease-in-out.js
+        //-------------------------------------
+        _fields="_Form,_More_Details,_Full_record,Volunteer,Login_Email,Project,Status,Start_date,End_date";
+        _fields+=",Submit Date|DateTime";
+        //-------------------------------------
+        $('#new__ID').hide();
+        //$('#save__ID').hide();
+        //-------------------------------------
+        _cell_render=function(records,I,field,td,set_value,source){
+            records[I].vm_readonly[field]=true;
+            switch(field){
+                case '_Full_record':
+                    records[I].vm_custom[field]=true;
+                    if(records[I].UID==null || records[I].UID==undefined) return;
+                    td.html("<u style='cursor:pointer;'>Full Record...</u>");
+                    td.find('u').on('click',function(){
+                        var sql="select ID,UID from [TABLE-"+_module.var.volunteer_tid+"] where S2=@S1";
+                        var req_data={cmd:'query_records',sql:sql,s1:records[I].Login_Email};
+                        $VmAPI.request({data:req_data,callback:function(res){
+                            if(res.records.length==1){
+                                $vm.load_module_by_name(_app_id+_module.panel,$vm.root_layout_content_slot,{
+                                    volunteer_name:records[I].Volunteer,
+                                    volunteer_login_email:records[I].Login_Email,
+                                    volunteer_rid:res.records[0].ID,
+                                    volunteer_pid:_module.var.volunteer_tid,
+                                    volunteer_uid:res.records[0].UID,
+                                })
+                            }
+                        }})
+                    })
+                    break;
+                    case '_More_Details':
+                        records[I].vm_custom[field]=true;
+                        if(records[I].UID==null || records[I].UID==undefined) return;
+                        td.html("<u style='cursor:pointer;'>More Details...</u>");
+                        td.find('u').on('click',function(){
+                            var sql="select Information,ID,UID from [TABLE-"+_module.var.volunteer_tid+"] where S2=@S1";
+                            var req_data={cmd:'query_records',sql:sql,s1:records[I].Login_Email};
+                            $VmAPI.request({data:req_data,callback:function(res){
+                                if(res.records.length==1){
+                                    $vm.load_module_by_name(_app_id+_module.expand,$vm.root_layout_content_slot,{
+                                        volunteer_rid:res.records[0].ID,
+                                    })
+                                }
+                            }})
+                        })
+                        break;
+            }
+        }
+        //-------------------------------------
+        $('#D__ID').on('load',function(){
+            //-----------------------
+            _set_req(); _request_data();
+        })
+        //-------------------------------------
+        var _set_req=function(){
+            var sql="with tb as (select Information,ID,UID,PUID,DateTime,Author,RowNum=row_number() over (order by ID DESC) from [TABLE-"+_db_pid+"-@S1] where S1=@s2 )";
+            sql+="select Information,ID,UID,PUID,DateTime,Author,RowNum from tb where RowNum between @I6 and @I7";
+            var sql_n="select count(ID) from [TABLE-"+_db_pid+"-@S1] where  S1=@s2";
+            _req={cmd:'query_records',db_pid:_db_pid,sql:sql,sql_n:sql_n,s1:'"'+$('#keyword__ID').val()+'"',I:$('#I__ID').text(),page_size:$('#page_size__ID').val(),s2:$vm.vm['__ID'].op.project_name}
+        }
+        //-------------------------------------
+    }
+</script>
+<style>
+    VmInclude:__BASE__/vmiis/Common-Code/grid/grid.css
+</style>

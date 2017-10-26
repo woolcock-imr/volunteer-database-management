@@ -1,0 +1,86 @@
+<section>
+    <div id=toolbar__ID>
+        <a id=back__ID>Back</a><span class=tab__ID></span><span id=nav_link__ID></span>
+    </div>
+    <div id=panel__ID style='clear:left;'>
+        <div class='nav__ID'>
+            <span>Volunteer Database</span>
+            <ul>
+                <li data-name=registration_demographic>Volunteers</li>
+                <!--
+                <ul>
+                    <li data-name=volunteer_control_panel>Volunteer Control Panel</li>
+                    <ul>
+                        <li data-name=volunteer_demographic_child data-s=1>Demographic</li>
+                        <li data-name=volunteer_subscription_child data-s=1>Medical research and newsletters</li>
+                        <li data-name=volunteer_medical_status_child data-s=1>Medical status</li>
+                        <li data-name=volunteer_call_log_child>Call log</li>
+                        <li data-name=volunteer_research_participation_child>Research participation</li>
+                    </ul>
+                </ul>
+            -->
+                <li data-name=projects>Projects</li>
+                <!--
+                <ul>
+                    <li data-name=project_control_panel>Project Control Panel</li>
+                    <ul>
+                        <li data-name=project_child data-s=1>Project details</li>
+                        <li data-name=project_volunteers>Volunteers</li>
+                    </ul>
+                </ul>
+            -->
+                <li data-name=volunteer_call_log>Call log</li>
+                <li data-name=volunteer_research_participation>Research participation</li>
+                <li data-name=volunteer_demographic_with_medical_status>Volunteers and medical status</li>
+            </ul>
+            <br>
+            <span>Reports</span>
+            <ul>
+                <li data-name=email_list_with_newsletter_subscription>Email list of volunteer with newsletter subscription</li>
+            </ul>
+            <br>
+            <span>Administration</span>
+            <ul>
+                <li data-name=volunteer_demographic_with_newsletters>Volunteers and newsletter subscription</li>
+            </ul>
+        </div>
+    </div>
+</section>
+<script>
+    //---------------------------------------------
+    function F__ID(){
+        //---------------------------------------------
+        VmInclude:__BASE__/vmiis/Common-Code/navigation/navigation.js
+        VmInclude:__BASE__/vmiis/Common-Code/style/ease-in-out.js
+        VmInclude:__BASE__/woolcock-imr/volunteer-database-management/modules/control_panels/main.js
+        //---------------------------------------------
+        _set_li_permissions();
+        //---------------------------------------------
+        $('#D__ID').on('load',function(){
+            _nav_name='Volunteer Database';
+            _set_nav_link();
+        });
+        //---------------------------------------------
+        _special_click_process=function(li){
+            var record_name=$(li).attr('data-name');
+            var slot=undefined;
+            $vm.load_module_by_name(_app_id+record_name,slot,{});
+        }
+        //-------------------------------------------------
+    }
+</script>
+<style>
+    VmInclude:__BASE__/vmiis/Common-Code/navigation/navigation.css
+    #D__ID{
+        background: url("__BASE__/vmiis/common-code/image/texture.png");
+    }
+    .nh__ID{
+        color:#888;
+        font-size:9pt;
+        font-weight: normal!Important;
+        margin:0!Important;
+    }
+    .nav__ID span{
+        color:#005500;
+    }
+</style>

@@ -1,0 +1,45 @@
+<section>
+    VmInclude:__BASE__/vmiis/Common-Code/grid/grid_without_export.html
+</section>
+<script>
+    function F__ID(){
+        //-------------------------------------
+        VmInclude:__BASE__/vmiis/Common-Code/grid/grid.js
+        VmInclude:__BASE__/vmiis/Common-Code/style/ease-in-out.js
+        //-------------------------------------
+        _fields="_Form,_More,First_Name,Last_Name,Phone,Postcode,Email,Gender,Year_of_Birth,Medical_Research,Newsletters";
+        _fields+=",Submit Date|DateTime,_Delete";
+        _db_pid='20008533';
+        //-------------------------------------
+        $('#new__ID').hide();
+        //-------------------------------------
+        _cell_render=function(records,I,field,td,set_value,source){
+            switch(field){
+                case 'Medical_Research':
+                case 'Newsletters':
+                    td.html('<input type=checkbox />');
+                    VmInclude:__BASE__/vmiis/Common-Code/grid/field_checkbox.js
+                break;
+                case '_More':
+                    records[I].vm_custom[field]=true;
+                    if(records[I].UID==null || records[I].UID==undefined) return;
+                    td.html("<u style='cursor:pointer;'>More...</u>");
+                    td.find('u').on('click',function(){
+                        $vm.load_module_by_name(_module.var.medical_research_volunnter_panel,$vm.root_layout_content_slot,{
+                            volunteer_name:records[I].First_Name+' '+records[I].Last_Name,
+                            volunteer_login_email:records[I].Email,
+                            rid:records[I].ID,
+                            volunteer_pid:_db_pid,
+                            volunteer_uid:records[I].UID,
+                        })
+                    })
+                    break;
+            }
+        }
+        $('#D__ID').on('load',function(){  _set_req(); _request_data();  })
+        //-------------------------------------
+    }
+</script>
+<style>
+    VmInclude:__BASE__/vmiis/Common-Code/grid/grid.css
+</style>

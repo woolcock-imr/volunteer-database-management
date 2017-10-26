@@ -1,0 +1,75 @@
+<section>
+    VmInclude:__BASE__/vmiis/Common-Code/grid/grid.html
+</section>
+<script>
+    function F__ID(){
+        //-------------------------------------
+        VmInclude:__BASE__/vmiis/Common-Code/grid/grid.js
+        VmInclude:__BASE__/vmiis/Common-Code/style/ease-in-out.js
+        //-------------------------------------
+        _fields="_Form,Volunteer,Project,Date,Notes|Call_log";
+        _fields+=",Submit Date|DateTime,Submitted by|Author,_Delete,_Hidden|Volunteer_uid";
+        //-------------------------------------
+        _cell_render=function(records,I,field,td,set_value,source){
+            switch(field){
+                case 'Volunteer':
+                    var sql="with tb as (select distinct val=@('First_Name')+' '+@('Last_Name'),name=@('First_Name')+' '+@('Last_Name')+' - '+@('Email'),UID from [TABLE-"+_module.var.volunteer_tid+"]) select name, value=val,value2=UID from tb where name like '%'+@S1+'%' ";
+                    td.autocomplete({
+                        minLength:0,
+                        source:function(request,response){
+                            $VmAPI.request({data:{cmd:'auto',s1:request.term,sql:sql,minLength:0},callback:function(res){
+                                response($vm.autocomplete_list(res.table));
+                            }});
+                        },
+                        select: function(event,ui){
+                            records[I][field+'_uid']=ui.item.value2;
+                            for(key in ui.item){
+                                if(key.indexOf('field_')!==-1){
+                                    var k=key.replace('field_','')
+                                    var v=ui.item[key];
+                                    alert(v)
+                                    set_value(v,records,I,k);
+                                    if(source=='grid'){
+                                        td.parent().find("td[data-id='"+k+"']").html(v);
+                                    }
+                                    else{
+                                        td.parent().parent().find("td[data-id='"+k+"']").html(v);
+                                    }
+                                }
+                            }
+                        }
+                    })
+                    td.focus(function(){td.autocomplete("search","");});
+                    break;
+                case 'Date':
+                    VmInclude:__BASE__/vmiis/Common-Code/grid/field_date.js
+                    break;
+            }
+        }
+        //-------------------------------------
+        $('#D__ID').on('load',function(){  _set_req(); _request_data();  })
+        //-------------------------------------
+        _new_pre_data_process=function(){
+            var d = new Date();
+            var month = d.getMonth()+1;
+            var day = d.getDate();
+            var output = (day<10 ? '0' : '') + day + '/' +
+            (month<10 ? '0' : '') + month + '/' +
+            d.getFullYear();
+            if($vm.vm['__ID'].op.project!==undefined)         _records[0].Project=$vm.vm['__ID'].op.project; else _records[0].Project='Admin'
+            if($vm.vm['__ID'].op.volunteer_name!==undefined)  _records[0].Volunteer=$vm.vm['__ID'].op.volunteer_name;
+            if($vm.vm['__ID'].op.volunteer_uid!==undefined)   _records[0].Volunteer_uid=$vm.vm['__ID'].op.volunteer_uid;
+           _records[0].Date=output;
+        }
+        //-------------------------------------
+        _before_submit=function(record,dbv){
+            dbv.PPID=_module.var.volunteer_tid;
+            dbv.PUID=record.Volunteer_uid;
+            return true;
+        };
+        //-------------------------------------
+    }
+</script>
+<style>
+    VmInclude:__BASE__/vmiis/Common-Code/grid/grid.css
+</style>

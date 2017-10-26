@@ -1,0 +1,64 @@
+<section>
+    VmInclude:__BASE__/vmiis/Common-Code/grid/grid.html
+</section>
+<script>
+    function F__ID(){
+        //-------------------------------------
+        VmInclude:__BASE__/vmiis/Common-Code/grid/grid.js
+        VmInclude:__BASE__/vmiis/Common-Code/style/ease-in-out.js
+        //-------------------------------------
+        _fields="_Form,Volunteer,Project,Date,Notes|Call_log";
+        _fields+=",Submit Date|DateTime,Submitted by|Author,_Delete,_Hidden|Volunteer_uid";
+        //-------------------------------------
+        _cell_render=function(records,I,field,td,set_value,source){
+            switch(field){
+                case 'Volunteer':
+                    records[I].vm_readonly[field]=true;
+                    break;
+                case 'Call_log':
+                    td.css('width','300px')
+                    break;
+                case 'Date':
+                    VmInclude:__BASE__/vmiis/Common-Code/grid/field_date.js
+                    break;
+            }
+        }
+        //-----------------------
+        $('#D__ID').on('load',function(){
+            jQuery.ajaxSetup({async:false});
+            _set_req(); _request_data();
+            if($vm.vm['__ID'].op.new_call=='1'){
+                $('#new__ID').click();
+            }
+            jQuery.ajaxSetup({async:true});
+        })
+        //-------------------------------------
+        _set_req=function(){
+            var sql="select ID,Information,DateTime,Author from [TABLE-"+_db_pid+"] where PUID=@i1 order by ID desc"
+            _req={cmd:'query_records',sql:sql,i1:$vm.vm['__ID'].op.volunteer_uid}
+        }
+        //-------------------------------------
+        _new_pre_data_process=function(){
+            var d = new Date();
+            var month = d.getMonth()+1;
+            var day = d.getDate();
+            var output = (day<10 ? '0' : '') + day + '/' +
+            (month<10 ? '0' : '') + month + '/' +
+            d.getFullYear();
+            if($vm.vm['__ID'].op.project!==undefined)         _records[0].Project=$vm.vm['__ID'].op.project; else _records[0].Project='Admin';
+            if($vm.vm['__ID'].op.volunteer_name!==undefined)  _records[0].Volunteer=$vm.vm['__ID'].op.volunteer_name;
+            if($vm.vm['__ID'].op.volunteer_uid!==undefined)   _records[0].Volunteer_uid=$vm.vm['__ID'].op.volunteer_uid;
+            _records[0].Date=output;
+        }
+        //-------------------------------------
+        _before_submit=function(record,dbv){
+            dbv.PPID='20008533';
+            dbv.PUID=record.Volunteer_uid;
+            return true;
+        };
+        //-------------------------------------
+    }
+</script>
+<style>
+    VmInclude:__BASE__/vmiis/Common-Code/grid/grid.css
+</style>

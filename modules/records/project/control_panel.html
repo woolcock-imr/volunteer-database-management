@@ -1,0 +1,55 @@
+<section>
+    <div id=toolbar__ID>
+        <a id=back__ID>Back</a><span class=tab__ID></span><span id=name__ID></span>
+    </div>
+    <div id=panel__ID style='clear:left;'>
+        <div class='nav__ID'>
+            <span>Project</span>
+            <ul>
+                <li data-name=project_child data-s=1>Project Details</li>
+                <li data-name=project_volunteers data-s=1>Volunteers</li>
+            </ul>
+            <br>
+    </div>
+</section>
+<script>
+    //---------------------------------------------
+    function F__ID(){
+        //---------------------------------------------
+        VmInclude:__BASE__/vmiis/Common-Code/navigation/navigation.js
+        VmInclude:__BASE__/vmiis/Common-Code/style/ease-in-out.js
+        //---------------------------------------------
+        var name='';
+        $('#D__ID').on('load',function(){
+            //-----------------------
+            name=$vm.vm['__ID'].op.project_name;
+            $('#name__ID').text(name);
+        });
+        //---------------------------------------------
+        _special_click_process=function(li){
+            var module_name=$(li).attr('data-name');
+            var slot=undefined;
+            switch(module_name){
+                case 'project_volunteers':
+                    slot=$vm.root_layout_content_slot;
+                break;
+            }
+            $vm.load_module_by_name(_app_id+module_name,slot,{
+                project_name:$vm.vm['__ID'].op.project_name,
+                project_rid:$vm.vm['__ID'].op.project_rid,
+                project_pid:$vm.vm['__ID'].op.project_pid,
+                project_uid:$vm.vm['__ID'].op.project_uid,
+            });
+        }
+        //-------------------------------------------------
+    }
+</script>
+<style>
+    VmInclude:__BASE__/vmiis/Common-Code/navigation/navigation.css
+    #D__ID{
+        background: url("__BASE__/vmiis/common-code/image/texture.png");
+    }
+    .nav__ID span{
+        color:#005500;
+    }
+</style>

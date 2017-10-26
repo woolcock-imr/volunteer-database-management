@@ -1,0 +1,180 @@
+<section>
+    VmInclude:__BASE__/vmiis/Common-Code/grid/grid.html
+</section>
+<script>
+    function F__ID(){
+        //-------------------------------------
+        VmInclude:__BASE__/vmiis/Common-Code/grid/grid.js
+        VmInclude:__BASE__/vmiis/Common-Code/style/ease-in-out.js
+        //-------------------------------------
+        _fields="_Form,_Hidden|_More_Details,_Hidden|_Full_record,_Call_Log,_Hidden|_Other_projects,_Summary,Volunteer,Login_Email,Project,Status,Start_date,End_date,Volunteering|I2_Medical_Research,Gender|I2_Gender,YOB|I2_Year_of_Birth,Asthma|I2_Asthma,COPD|I2_COPD,Emphysema|I2_Emphysema,Lung_Cancer|I2_Lung_Cancer";
+        _fields+=",Rhintis|I2_Rhintis,Insomnia|I2_Insomnia,Narcolepsy|I2_Narcolepsy,OSA|I2_OSA,RLS|I2_RLS,Phone|I2_Phone,Email|I2_Email";
+        _fields+=",Submit Date|DateTime";
+        //-------------------------------------
+        $('#new__ID').hide();
+        //$('#save__ID').hide();
+        //-------------------------------------
+        _cell_render=function(records,I,field,td,set_value,source){
+            records[I].vm_readonly[field]=true;
+            switch(field){
+                case '_Call_Log':
+                    records[I].vm_custom[field]=true;
+                    if(records[I].UID==null || records[I].UID==undefined) return;
+                    td.html("<u style='cursor:pointer;'>Call Log...</u>");
+                    td.find('u').on('click',function(){
+                        var sql="select Information,ID,UID from [TABLE-"+_module.var.volunteer_tid+"] where S2=@S1";
+                        var req_data={cmd:'query_records',sql:sql,s1:records[I].Login_Email};
+                        $VmAPI.request({data:req_data,callback:function(res){
+                            if(res.records.length==1){
+                                $vm.load_module_by_name(_app_id+_module.call_rec,$vm.root_layout_content_slot,{
+                                    volunteer_name:records[I].Volunteer,
+                                    volunteer_login_email:records[I].Login_Email,
+                                    volunteer_rid:res.records[0].ID,
+                                    volunteer_pid:_module.var.volunteer_tid,
+                                    volunteer_uid:res.records[0].UID,
+                                })
+                            }
+                        }})
+                    })
+                    break;
+                case '_Other_projects':
+                    records[I].vm_custom[field]=true;
+                    if(records[I].UID==null || records[I].UID==undefined) return;
+                    td.html("<u style='cursor:pointer;'>Other Projects...</u>");
+                    td.find('u').on('click',function(){
+                        var sql="select Information,ID,UID from [TABLE-"+_module.var.volunteer_tid+"] where S2=@S1";
+                        var req_data={cmd:'query_records',sql:sql,s1:records[I].Login_Email};
+                        $VmAPI.request({data:req_data,callback:function(res){
+                            if(res.records.length==1){
+                                $vm.load_module_by_name(_app_id+_module.sub_rec,$vm.root_layout_content_slot,{
+                                    volunteer_name:records[I].Volunteer,
+                                    volunteer_login_email:records[I].Login_Email,
+                                    volunteer_rid:res.records[0].ID,
+                                    volunteer_pid:_module.var.volunteer_tid,
+                                    volunteer_uid:res.records[0].UID,
+                                })
+                            }
+                        }})
+                    })
+                    break;
+                    case '_Summary':
+                        records[I].vm_custom[field]=true;
+                        if(records[I].UID==null || records[I].UID==undefined) return;
+                        td.html("<u style='cursor:pointer;'>Summary...</u>");
+                        td.find('u').on('click',function(){
+                            var sql="select Information,ID,UID from [TABLE-"+_module.var.volunteer_tid+"] where S2=@S1";
+                            var req_data={cmd:'query_records',sql:sql,s1:records[I].Login_Email};
+                            $VmAPI.request({data:req_data,callback:function(res){
+                                if(res.records.length==1){
+                                    $vm.load_module_by_name(_app_id+_module.sum_rec,$vm.root_layout_content_slot,{
+                                        volunteer_name:records[I].Volunteer,
+                                        volunteer_login_email:records[I].Login_Email,
+                                        volunteer_rid:res.records[0].ID,
+                                        volunteer_pid:_module.var.volunteer_tid,
+                                        volunteer_uid:res.records[0].UID,
+                                        prj:records[I].Project,
+                                    })
+                                }
+                            }})
+                        })
+                        break;
+                case '_Full_record':
+                    records[I].vm_custom[field]=true;
+                    if(records[I].UID==null || records[I].UID==undefined) return;
+                    td.html("<u style='cursor:pointer;'>Full Record...</u>");
+                    td.find('u').on('click',function(){
+                        var sql="select ID,UID from [TABLE-"+_module.var.volunteer_tid+"] where S2=@S1";
+                        var req_data={cmd:'query_records',sql:sql,s1:records[I].Login_Email};
+                        $VmAPI.request({data:req_data,callback:function(res){
+                            if(res.records.length==1){
+                                $vm.load_module_by_name(_app_id+_module.panel,$vm.root_layout_content_slot,{
+                                    volunteer_name:records[I].Volunteer,
+                                    volunteer_login_email:records[I].Login_Email,
+                                    volunteer_rid:res.records[0].ID,
+                                    volunteer_pid:_module.var.volunteer_tid,
+                                    volunteer_uid:res.records[0].UID,
+                                })
+                            }
+                        }})
+                    })
+                    break;
+                    case '_More_Details':
+                        records[I].vm_custom[field]=true;
+                        if(records[I].UID==null || records[I].UID==undefined) return;
+                        td.html("<u style='cursor:pointer;'>More Details...</u>");
+                        td.find('u').on('click',function(){
+                            var sql="select Information,ID,UID from [TABLE-"+_module.var.volunteer_tid+"] where S2=@S1";
+                            var req_data={cmd:'query_records',sql:sql,s1:records[I].Login_Email};
+                            $VmAPI.request({data:req_data,callback:function(res){
+                                if(res.records.length==1){
+                                    $vm.load_module_by_name(_app_id+_module.expand,$vm.root_layout_content_slot,{
+                                        volunteer_rid:res.records[0].ID,
+                                    })
+                                }
+                            }})
+                        })
+                        break;
+/*                    case 'Status':
+                        var html="<select style='border:0;'>"
+                        html+="<option>Registration</option>";
+                        html+="<option>Screening</option>";
+                        html+="<option>Screening Failure</option>";
+                        html+="<option>Enrolled</option>";
+                        html+="<option>Withdrawn</option>";
+                        html+="<option>Completed</option>";
+
+                        html+="</select>"
+                        records[I].vm_custom[field]=true;
+                        td.html(html)
+                        td.find('select').val(records[I][field])
+                        td.find('select').on('change', function(){
+                            set_value($(this).val(),records,I,field);
+                            var today = new Date();
+                            var dd = today.getDate();
+                            var mm = today.getMonth()+1; //January is 0!
+                            var yyyy = today.getFullYear();
+                            if(dd<10){dd='0'+dd;}
+                            if(mm<10){mm='0'+mm;}
+                            var today = dd+'/'+mm+'/'+yyyy;
+                            if($(this).val()==='DO NOT CALL' || $(this).val()==='Screening'){
+                                set_value(today,records,I,'Start_date');
+                                _render(I);
+                            }
+                            if($(this).val()==='Completed' || $(this).val()==='Withdrawn'){
+                                set_value(today,records,I,'End_date');
+                                _render(I);
+                            }
+                        });
+                        break;
+                    case 'Start_date':
+                    case 'End_date':
+                        VmInclude:__BASE__/vmiis/Common-Code/grid/field_date.js
+                        break;
+*/            }
+        }
+        //-------------------------------------
+        $('#D__ID').on('load',function(){
+            //-----------------------
+            $('#save__ID').hide();
+            _set_req(); _request_data();
+        })
+        //-------------------------------------
+        var _set_req=function(){
+            var sql="with tb as (select Information,LE=@('Login_Email'),ID,UID,PUID,DateTime,Author,RowNum=row_number() over (order by ID DESC) from [TABLE-"+_db_pid+"-@S1] where S1=@s2)";
+            sql+=",tb1 as (select Information2=Information,S1 from [TABLE-20008533])";
+            sql+="select Information2,Information,ID,UID,PUID,DateTime,Author,RowNum from tb left join tb1 on S1=LE  where RowNum between @I6 and @I7";
+            var sql_n="select count(ID) from [TABLE-"+_db_pid+"-@S1] where  S1=@s2";
+            _req={cmd:'query_records',db_pid:_db_pid,sql:sql,sql_n:sql_n,s1:'"'+$('#keyword__ID').val()+'"',I:$('#I__ID').text(),page_size:$('#page_size__ID').val(),s2:$vm.vm['__ID'].op.project_name}
+        }
+        //-------------------------------------
+        _before_submit=function(record,dbv){
+            dbv.S1=record.Project;
+            dbv.S2='system_20008533_'+record.Login_Email;
+            dbv.S3=record.Status;
+            return true;
+        };
+    }
+</script>
+<style>
+    VmInclude:__BASE__/vmiis/Common-Code/grid/grid.css
+</style>

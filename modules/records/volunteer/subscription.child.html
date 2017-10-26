@@ -1,0 +1,60 @@
+<section>
+    <div id=toolbar__ID>
+        <a id=new__ID style="display:none" />
+        <a id=back__ID>Back</a> <a id=save__ID>Save</a> <span class=tab__ID></span><span id=name__ID></span>
+    </div>
+    <table id=grid__ID></table>
+</section>
+<script>
+    function F__ID(){
+        //-------------------------------------
+        VmInclude:__BASE__/vmiis/Common-Code/grid/grid.js
+        VmInclude:__BASE__/vmiis/Common-Code/style/ease-in-out.js
+        //-------------------------------------
+        _fields="_Form,First_Name,Last_Name,Medical_Research,Newsletters";
+        _fields+=",Submit Date|DateTime,Submitted by|Author";
+        //-------------------------------------
+        $('#new__ID').hide();
+        //-------------------------------------
+        _cell_render=function(records,I,field,td,set_value,source){
+            switch(field){
+                case 'First_Name':
+                case 'Last_Name':
+                    records[I].vm_readonly[field]=true;
+                    break;
+                case 'Medical_Research':
+                case 'Newsletters':
+                    records[I].vm_custom[field]=true;
+                    var html="<input type='checkbox' />"
+                    td.html(html)
+                    if(records[I][field]==='1' || records[I][field]==='on' || records[I][field]==='True')  td.find('input').prop('checked', true);
+                    else td.find('input').prop('checked', false);
+                    td.find('input').on('change', function(){
+                        var c=0;
+                        if($(this). prop("checked") == true) c=1;
+                        set_value(c,records,I,field);
+                    });
+                    break;
+            }
+        }
+        //-------------------------------------
+        $('#D__ID').on('load',function(){
+            //-----------------------
+            _set_req(); _request_data();
+        })
+        //-------------------------------------
+        _set_req=function(){
+            var sql="select ID,Information,DateTime,Author from [TABLE-"+_db_pid+"] where S2=@s1"
+            _req={cmd:'query_records',sql:sql,s1:$vm.vm['__ID'].op.volunteer_login_email}
+        }
+        //-------------------------------------
+        _data_process_after_render=function(){
+            var form=$('#grid__ID tr:nth-child(2)').find('u:first');
+            form.triggerHandler('click');
+        }
+        //-------------------------------------
+    }
+</script>
+<style>
+    VmInclude:__BASE__/vmiis/Common-Code/grid/grid.css
+</style>

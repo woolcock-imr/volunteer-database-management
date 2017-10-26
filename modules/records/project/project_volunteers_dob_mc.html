@@ -1,0 +1,34 @@
+<section>
+    VmInclude:__BASE__/vmiis/Common-Code/grid/grid_without_export.html
+</section>
+<script>
+    function F__ID(){
+        //-------------------------------------
+        VmInclude:__BASE__/vmiis/Common-Code/grid/grid.js
+        VmInclude:__BASE__/vmiis/Common-Code/style/ease-in-out.js
+        //-------------------------------------
+        _fields="Year_of_Birth,Asthma,COPD,Chronic_Bronchitis,Emphysema,Rhintis,Lung_Cancer,Insomnia,Narcolepsy,OSA,RLS";
+        //-------------------------------------
+        $('#new__ID').hide();
+        //$('#save__ID').hide();
+        //-------------------------------------
+        _cell_render=function(records,I,field,td,set_value,source){
+            records[I].vm_readonly[field]=true;
+            switch(field){
+            }
+        }
+        //-------------------------------------
+        $('#D__ID').on('load',function(){
+            _set_req(); _request_data();
+        })
+        //-------------------------------------
+        var _set_req=function(){
+            var sql="select Information from [TABLE-"+_db_pid+"] where ID=@I2 ";
+            _req={cmd:'query_records',db_pid:_db_pid,sql:sql,i2:$vm.vm['__ID'].op.volunteer_rid}
+        }
+        //-------------------------------------
+    }
+</script>
+<style>
+    VmInclude:__BASE__/vmiis/Common-Code/grid/grid.css
+</style>

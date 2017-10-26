@@ -1,0 +1,93 @@
+<section>
+      VmInclude:__BASE__/vmiis/Common-Code/grid/grid.html
+</section>
+<script>
+    function F__ID(){
+        //-------------------------------------
+        VmInclude:__BASE__/vmiis/Common-Code/grid/grid.js
+        VmInclude:__BASE__/vmiis/Common-Code/style/ease-in-out.js
+        //-------------------------------------
+        _fields="Volunteer,Login_Email,Project,Status,Start_date,End_date";
+        _fields+=",Submit Date|DateTime,Submitted by|Author,_Delete,_Hidden|Volunteer_uid";
+        //-------------------------------------
+        $('#D__ID').on('load',function(){
+            //-----------------------
+            $('#save__ID').hide();$('#new__ID').hide();
+            _set_req(); _request_data();
+        })
+        //-------------------------------------
+        var volunteer_pid=_module.var.volunteer_tid;
+        _cell_render=function(records,I,field,td,set_value,source){
+            switch(field){
+                case 'Volunteer':
+                case 'Login_Email':
+                    records[I].vm_readonly[field]=true;
+                    break;
+/*                case 'Status':
+                    records[I].vm_custom[field]=true;
+                    var html="<select style='border:0;'>"
+                    html+="<option>Registration</option>";
+                    html+="<option>Screening</option>";
+                    html+="<option>Screening Failure</option>";
+                    html+="<option>Enrolled</option>";
+                    html+="<option>Withdrawn</option>";
+                    html+="<option>Completed</option>";
+
+                    html+="</select>"
+                    records[I].vm_custom[field]=true;
+                    td.html(html)
+                    td.find('select').val(records[I][field])
+                    td.find('select').on('change', function(){
+                        set_value($(this).val(),records,I,field);
+                        var today = new Date();
+                        var dd = today.getDate();
+                        var mm = today.getMonth()+1; //January is 0!
+                        var yyyy = today.getFullYear();
+                        if(dd<10){dd='0'+dd;}
+                        if(mm<10){mm='0'+mm;}
+                        var today = dd+'/'+mm+'/'+yyyy;
+                        if($(this).val()==='DO NOT CALL' || $(this).val()==='Screening'){
+                            set_value(today,records,I,'Start_date');
+                            _render(I);
+                        }
+                        if($(this).val()==='Completed' || $(this).val()==='Withdrawn'){
+                            set_value(today,records,I,'End_date');
+                            _render(I);
+                        }
+                    });
+                    break;
+                case 'Start_date':
+                case 'End_date':
+                    VmInclude:__BASE__/vmiis/Common-Code/grid/field_date.js
+                    break;
+*/            }
+        }
+        //-------------------------------------
+        _data_process=function(){
+            for(var i=0;i<_records.length;i++){
+                _records[i].Author=_records[i].Author.replace('system_20008533_','')
+            }
+        }
+        //-------------------------------------
+        _before_submit=function(record,dbv){
+            dbv.S1=record.Project;
+            dbv.S2='system_20008533_'+record.Login_Email;
+            dbv.S3=record.Status;
+            return true;
+        };
+        //-------------------------------------
+        _set_req=function(){
+            var sql="select ID,Information,DateTime,Author from [TABLE-"+_db_pid+"] where S2=@s1"
+            _req={cmd:'query_records',sql:sql,s1:'system_20008533_'+$vm.vm['__ID'].op.volunteer_login_email}
+        }
+        //-------------------------------------
+        _new_pre_data_process=function(){
+            if($vm.vm['__ID'].op.volunteer_name!==undefined)          _records[0].Volunteer=$vm.vm['__ID'].op.volunteer_name;
+            if($vm.vm['__ID'].op.volunteer_login_email!==undefined)   _records[0].Login_Email=$vm.vm['__ID'].op.volunteer_login_email;
+        }
+        //-------------------------------------
+    }
+</script>
+<style>
+    VmInclude:__BASE__/vmiis/Common-Code/grid/grid.css
+</style>

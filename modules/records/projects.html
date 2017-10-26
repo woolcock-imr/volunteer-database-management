@@ -1,0 +1,76 @@
+<section>
+    VmInclude:__BASE__/vmiis/Common-Code/grid/grid_without_export.html
+</section>
+<script>
+    function F__ID(){
+        //-------------------------------------
+        VmInclude:__BASE__/vmiis/Common-Code/grid/grid.js
+        VmInclude:__BASE__/vmiis/Common-Code/style/ease-in-out.js
+        //-------------------------------------
+        _fields="_Form,Project_Name,Approved,Approved_By";
+        _fields+=",_gridHidden|Image,_gridHidden|Catchy_title,_gridHidden|Brief_Description,_gridHidden|Detail_Description";
+        _fields+=",Chief_Investigator,Contact_Name, Contact_Phone,Contact_Email,_gridHidden|Ethics,_gridHidden|Others";
+        _fields+=",_gridHidden|Postcode_Min,_gridHidden|Postcode_Max,_gridHidden|Gender,_gridHidden|Age_Min,_gridHidden|Age_Max,_gridHidden|Inc_Asthma,_gridHidden|Inc_COPD,_gridHidden|Inc_Emphysema,_gridHidden|Inc_Lung_Cancer,_gridHidden|Inc_Rhintis,_gridHidden|Inc_Insomnia,_gridHidden|Inc_Narcolepsy,_gridHidden|Inc_OSA,Inc_RLS,_gridHidden|Exc_Asthma,_gridHidden|Exc_COPD,_gridHidden|Exc_Emphysema,_gridHidden|Exc_Lung_Cancer,_gridHidden|Exc_Rhintis,_gridHidden|Exc_Insomnia,_gridHidden|Exc_Narcolepsy,_gridHidden|Exc_OSA,_gridHidden|Exc_RLS";
+        _fields+=",Submit Date|DateTime,_Delete";
+        //-------------------------------------
+        _cell_render=function(records,I,field,td,set_value,source){
+            switch(field){
+                case 'Image':
+                    VmInclude:__BASE__/vmiis/Common-Code/grid/field_image.js
+                    break;
+                case '_More':
+                    records[I].vm_custom[field]=true;
+                    if(records[I].UID==null || records[I].UID==undefined) return;
+                    td.html("<u style='cursor:pointer;'>More...</u>");
+                    td.find('u').on('click',function(){
+                        $vm.load_module_by_name(_app_id+_module.panel,$vm.root_layout_content_slot,{
+                            project_name:records[I].Project_Name,
+                            project_rid:records[I].ID,
+                            project_pid:_db_pid,
+                            project_uid:records[I].UID,
+                        })
+                    })
+                    break;
+                case 'Gender':
+                    records[I].vm_custom[field]=true;
+                    var html="<select style='border:0;'>"
+                    html+="<option>---</option>";
+                    html+="<option>Male</option>";
+                    html+="<option>Female</option>";
+                    html+="<option>Any</option>";
+                    html+="</select>"
+                    VmInclude:__BASE__/vmiis/Common-Code/grid/field_select.js
+                    break;
+                case 'Inc_Asthma':
+                case 'Inc_COPD':
+                case 'Inc_Emphysema':
+                case 'Inc_Lung_Cancer':
+                case 'Inc_Rhintis':
+                case 'Inc_Insomnia':
+                case 'Inc_Narcolepsy':
+                case 'Inc_OSA':
+                case 'Inc_RLS':
+                case 'Exc_Asthma':
+                case 'Exc_COPD':
+                case 'Exc_Emphysema':
+                case 'Exc_Lung_Cancer':
+                case 'Exc_Rhintis':
+                case 'Exc_Insomnia':
+                case 'Exc_Narcolepsy':
+                case 'Exc_OSA':
+                case 'Exc_RLS':
+                case 'Approved':
+                    td.html('<input type=checkbox />');
+                    td.css('text-align','center')
+                    VmInclude:__BASE__/vmiis/Common-Code/grid/field_checkbox.js
+                    break;
+            }
+        }
+        //-------------------------------------
+        $('#D__ID').on('load',function(){  _set_req(); _request_data();  })
+        //-------------------------------------
+    }
+</script>
+<style>
+    VmInclude:__BASE__/vmiis/Common-Code/grid/grid.css
+</style>
